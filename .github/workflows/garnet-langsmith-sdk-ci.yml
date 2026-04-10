@@ -1,0 +1,40 @@
+name: Garnet LangSmith SDK CI
+on:
+  workflow_dispatch:
+jobs:
+  dep-install-python:
+    name: Python Dep Install (Garnet)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Garnet Runtime Visibility
+        uses: garnet-org/action@v2
+        with:
+          api_token: ${{ secrets.GARNET_API_TOKEN }}
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install uv
+        run: pip install uv
+      - name: Install Python SDK
+        working-directory: python
+        run: uv sync --all-extras
+  dep-install-js:
+    name: JS Dep Install (Garnet)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Garnet Runtime Visibility
+        uses: garnet-org/action@v2
+        with:
+          api_token: ${{ secrets.GARNET_API_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install JS SDK
+        working-directory: js
+        run: npm install
